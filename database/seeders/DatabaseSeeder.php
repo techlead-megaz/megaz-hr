@@ -74,6 +74,7 @@ class DatabaseSeeder extends Seeder
             StaffSeeder::class,
             GpsSeeder::class,
             DepartmentFeatureSeeder::class,
+            NrcTownshipSeeder::class, //important
         ]);
     }
 }
