@@ -14,7 +14,7 @@ class Department extends BaseModel
     use HasFactory;
 
     protected $fillable=[
-        'name','inventory_id','slug',
+        'name','inventory_id','slug','is_active'
     ];
 
     protected $hidden=[
@@ -41,10 +41,10 @@ class Department extends BaseModel
         return $this->hasMany(Role::class)->where('is_available',1);
     }
 
-    public function itemUsageForecasts()
-    {
-        return $this->hasMany(ItemUsageForecast::class);
-    }
+    // public function itemUsageForecasts()
+    // {
+    //     return $this->hasMany(ItemUsageForecast::class);
+    // }
 
     // public function inventory()
     // {

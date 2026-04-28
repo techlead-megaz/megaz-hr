@@ -16,6 +16,11 @@
     },
     {
         "module": "staff",
+        "name": "Staff Update Status ",
+        "slug": "staff.status-update"
+    },
+    {
+        "module": "staff",
         "name": "Staff Active On\/Off",
         "slug": "staff.toggle"
     },

@@ -45,4 +45,6 @@ interface StaffRepositoryInterface
     public function attachStaffContracts($id, Request $request);
 
     public function updateStaffStatus($request);
+
+    public function changeStaffPassword($request);
 }

@@ -148,8 +148,26 @@ Route::controller(FeatureAPIController::class)->group(function () {
 Route::middleware('auth:api')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
-    
 
+    Route::post('/staffs/change_password', [StaffAPIController::class, 'changeStaffPassword']);
+    Route::get('/staff_reports', [StaffAPIController::class, 'staffReport']);
+    Route::get('/staffs', [StaffAPIController::class, 'getStaffData']);
+    Route::get('/staffs/{id}', [StaffAPIController::class, 'detailStaff']);
+    Route::post('/staffs', [StaffAPIController::class, 'createStaff']);
+    Route::post('/staffs/{id}', [StaffAPIController::class, 'updateStaff'])->middleware('permission:staff.status-update');
+    Route::post('/update_staff_status', [StaffAPIController::class, 'updateStatus']);
+    Route::delete('/staffs/{id}', [StaffAPIController::class, 'deleteStaff']);
+    Route::delete('/staffs/{staff_id}/roles/{role_id}', [StaffAPIController::class, 'deleteRoleStaff']);
+    Route::delete('/staffs/{staff_id}/inventories/{inventory_id}', [StaffAPIController::class, 'deleteInventoryStaff']);
+    Route::delete('/staffs/{staff_id}/features/{feature_id}', [StaffAPIController::class, 'deleteFeatureStaff']);
+    Route::get('/dddepartment_id}/staffs', [StaffAPIController::class, 'getStaffByDepartment']);
+    Route::get('/staff_by_department_slug/{slug}', [StaffAPIController::class, 'getStaffByDepartmentSlug']);
+    Route::get('/staff_balances', [StaffAPIController::class, 'staffBalanceList']);
+    Route::get('/staff_balances/{id}', [StaffAPIController::class, 'detailStaffBalance']);
+    Route::get('/staff/{id}/duties', [StaffAPIController::class, 'getStaffWithDuties']);
+    Route::post('/staffs/{staffId}/change_password', [StaffAPIController::class, 'changePassword']);
+    Route::post('/staff/{id}/upload_contracts', [StaffAPIController::class, 'uploadStaffContracts']);
+    Route::get('/nrcs', [StaffAPIController::class, 'nrcLists']);
     // Route::get('/profile', [ProfileAPIController::class, 'getProfile']);
     // Route::post('/profile/change_password', [ProfileAPIController::class, 'updatePassword']);
 
@@ -169,7 +187,7 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('/staffs_by_role', [StaffAPIController::class, 'getStaffListBySupervisor']);
-    Route::get('/supervisor/staff/{staffId}/tasks', action: [TaskController::class, 'getStaffTasksBySupervisor']);
+    // Route::get('/supervisor/staff/{staffId}/tasks', action: [TaskController::class, 'getStaffTasksBySupervisor']);
     // Route::get('/task_list', [TaskController::class, 'getStaffTasksBySupervisor']);
 
     // Route::controller(TaskController::class)->group(function () {
@@ -306,25 +324,7 @@ Route::post('/roles', [RoleAPIController::class, 'createRole']);
 Route::post('/roles/{id}', [RoleAPIController::class, 'updateRole']);
 Route::post('/roles/{roleId}/available_toggle', [RoleAPIController::class, 'roleAvailableToggle']);
 
-Route::get('/staff_reports', [StaffAPIController::class, 'staffReport']);
-Route::get('/staffs', [StaffAPIController::class, 'getStaffData']);
-Route::get('/staffs/{id}', [StaffAPIController::class, 'detailStaff']);
-Route::post('/staffs', [StaffAPIController::class, 'createStaff']);
-Route::post('/staffs/{id}', [StaffAPIController::class, 'updateStaff']);
-Route::post('/update_staff_status', [StaffAPIController::class, 'updateStatus']);
-Route::delete('/staffs/{id}', [StaffAPIController::class, 'deleteStaff']);
-Route::delete('/staffs/{staff_id}/roles/{role_id}', [StaffAPIController::class, 'deleteRoleStaff']);
-Route::delete('/staffs/{staff_id}/inventories/{inventory_id}', [StaffAPIController::class, 'deleteInventoryStaff']);
-Route::delete('/staffs/{staff_id}/features/{feature_id}', [StaffAPIController::class, 'deleteFeatureStaff']);
-Route::get('/dddepartment_id}/staffs', [StaffAPIController::class, 'getStaffByDepartment']);
-Route::get('/staff_by_department_slug/{slug}', [StaffAPIController::class, 'getStaffByDepartmentSlug']);
-Route::get('/staff_balances', [StaffAPIController::class, 'staffBalanceList']);
-Route::get('/staff_balances/{id}', [StaffAPIController::class, 'detailStaffBalance']);
-Route::get('/staff/{id}/duties', [StaffAPIController::class, 'getStaffWithDuties']);
-Route::post('/staffs/{staffId}/change_password', [StaffAPIController::class, 'changePassword']);
-Route::post('/staff/{id}/upload_contracts', [StaffAPIController::class, 'uploadStaffContracts']);
 
-Route::get('/nrcs', [StaffAPIController::class, 'nrcLists']);
 Route::controller(BankController::class)->group(function () {
     Route::get('/banks', 'getAllBanks');
     Route::post('/banks', 'createBank');

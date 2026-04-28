@@ -281,7 +281,6 @@ class TimeShiftRepository implements TimeShiftRepositoryInterface
 
   public function adminPostedcheckIn(array $requestData)
   {
-    // dd($requestData);
     try {
       if (!isset($requestData['id'])) {
         $requestData['id'] = null;
@@ -290,7 +289,35 @@ class TimeShiftRepository implements TimeShiftRepositoryInterface
       if (isset($requestData['id']) && !empty($requestData['id'])) {
         self::validateCheckInEdit($requestData['time_shift_id'], $requestData['check_in_date_time']);
       }
+        $staffTimeShift = StaffTimeShift::where('timeshift_id', $requestData['time_shift_id'])
+          ->where('staff_id', $requestData['staff_id'])
+          ->whereDate('date_time', Carbon::today())
+          ->first();
+
+      if (!$staffTimeShift) {
+        return ResponseMessage("No assigned shift found for this selection.", 419);
+      }
+      switch ($staffTimeShift->status) {
+        case 'pending':
+          return ResponseMessage('Check-in is invalid. You must accept the shift assignment first.', 419);
+
+        case 'cancelled':
+          return ResponseMessage('Check-in is invalid. Your shift assignment has been cancelled.', 419);
+
+          // Add other statuses here if needed (e.g., 'expired', 'suspended')
+      }
+
+      if (isset($requestData['id']) && !empty($requestData['id'])) {
+        self::validateCheckInEdit($requestData['time_shift_id'], $requestData['check_in_date_time']);
+      } else {
+        // Only check for duplicate check-ins if creating a new record
+        $alreadyCheckedIn = CheckIn::where('staff_timeshift_id', $staffTimeShift->id)->exists();
+        if ($alreadyCheckedIn) {
+          return ResponseMessage("You have already checked in for this shift.", 419);
+        }
+      }
       $requestData['is_current_checked_in'] = false;
+      $requestData['staff_timeshift_id'] = $staffTimeShift->id;
       DB::beginTransaction();
       $checkIn = CheckIn::updateOrCreate(
         [

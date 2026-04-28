@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\StaffResource;
 use App\Models\StaffEmergencyContact;
 use Illuminate\Support\Facades\Storage;
+use Kreait\Firebase\Exception\Auth\UserDisabled;
 
 class StaffRepository implements StaffRepositoryInterface
 {
@@ -552,6 +553,23 @@ class StaffRepository implements StaffRepositoryInterface
             $staff->save();
             DB::commit();
             return $staff;
+        } catch (\Exception $e) {
+            DB::rollback();
+            ResponseMessage($e->getMessage(), 402);
+            throw $e;
+        }
+    }
+
+    public function changeStaffPassword($data){
+        DB::beginTransaction();
+        try {
+            $staff = Staff::find($data['staff_id']);
+            $staff->update([
+                'password' => ($data['new_password']),
+            ]);
+            DB::commit();
+            return $staff;
+            // ResponseMessage('Password changed successfully', 200);
         } catch (\Exception $e) {
             DB::rollback();
             ResponseMessage($e->getMessage(), 402);

@@ -10,6 +10,7 @@ use App\Http\Requests\Staff\StaffUpdateRequest;
 use App\Models\Staff;
 use App\Repositories\Staff\StaffRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Psy\Readline\Hoa\_Protocol;
 
@@ -231,5 +232,15 @@ class StaffAPIController extends Controller
             ])
         ->get();
         ResponseData($staff);
+    }
+
+    public function changeStaffPassword(Request $request){
+        $request->validate([
+            'staff_id' => 'required|exists:staff,id',
+            'new_password' => 'required|min:6',
+            'admin_password'=>'required|current_password',
+        ]);
+        $data = $this->staffRepo->changeStaffPassword($request);
+        ResponseMessage("Password changed successfully");
     }
 }
