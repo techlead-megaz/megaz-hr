@@ -69,7 +69,7 @@ class SalaryRepository implements SalaryRepositoryInterface
       $exists = SalarySetup::where('role_id', $data['role_id'])->exists();
 
       if ($exists) {
-        \ResponseMessage('Salary setup already exists for this role.',422);
+        \ResponseMessage('Salary setup already exists for this role.', 422);
       }
       $salarySetup = SalarySetup::create([
         'basic_salary' => $data['basic_salary'],
@@ -455,7 +455,7 @@ class SalaryRepository implements SalaryRepositoryInterface
         ->whereHas('features', function ($query) {
           $query->where('module', 'over-time');
         })
-      ->where('id', '!=', $overtime->staff_id)->get();
+        ->where('id', '!=', $overtime->staff_id)->get();
       $this->sendFcmNotification($overtime, $allStaff, $notificationData);
       ResponseData($overtime);
     } catch (\Exception $e) {
@@ -728,19 +728,20 @@ class SalaryRepository implements SalaryRepositoryInterface
         'salaryBatch',
         'staff.overtimes',
         'staff.salary',
+        'staff.leaves',
         'staff.salary.salarySetup',
         'staff.salary.salarySetup.salaryAllowances',
-        'staff.leaves' => function ($query) use ($startDate, $endDate) {
-          $query->where('status', 'confirmed')->where('is_unpaid_leave', 1)
-            ->where(function ($q) use ($startDate, $endDate) {
-              $q->whereBetween('start_date', [$startDate, $endDate])
-                ->orWhereBetween('end_date', [$startDate, $endDate])
-                ->orWhere(function ($q) use ($startDate, $endDate) {
-                  $q->where('start_date', '<=', $startDate)
-                    ->where('end_date', '>=', $endDate);
-                });
-            });
-        }
+        // 'staff.leaves' => function ($query) use ($startDate, $endDate) {
+        //   $query->where('status', 'confirmed')->where('is_unpaid_leave', 1)
+        //     ->where(function ($q) use ($startDate, $endDate) {
+        //       $q->whereBetween('start_date', [$startDate, $endDate])
+        //         ->orWhereBetween('end_date', [$startDate, $endDate])
+        //         ->orWhere(function ($q) use ($startDate, $endDate) {
+        //           $q->where('start_date', '<=', $startDate)
+        //             ->where('end_date', '>=', $endDate);
+        //         });
+        //     });
+        // }
       ])
       ->paginate(config('common.list_count'));
 
@@ -756,7 +757,7 @@ class SalaryRepository implements SalaryRepositoryInterface
       $checkIns = CheckIn::where('staff_id', $staff->id)
         ->whereBetween('check_in_date_time', [$startDate, $endDate])
         ->get();
-      $actualCheckIn = $checkIns
+      $actualWorkedDay = $checkIns
         ->pluck('check_in_date_time')
         ->map(fn($date) => \Carbon\Carbon::parse($date)->toDateString())
         ->unique()
@@ -825,19 +826,28 @@ class SalaryRepository implements SalaryRepositoryInterface
           }
         }
 
-        $unpaidLeaveCount = 0;
-        foreach ($staff->leaves as $leave) {
-          if ($leave->is_unpaid_leave) {
-            // Count the number of unpaid leave days in the date range
-            $leaveStartDate = Carbon::parse($leave->start_date);
-            $leaveEndDate = Carbon::parse($leave->end_date);
+        $result = $staff->leaves()
+          ->where('status', 'confirmed')
+          ->selectRaw("
+        SUM(CASE WHEN is_unpaid_leave = 1 THEN day ELSE 0 END) as unpaid_leave_count,
+        SUM(CASE WHEN is_unpaid_leave = 0 OR is_unpaid_leave IS NULL THEN day ELSE 0 END) as paid_leave_count
+    ")
+          ->first();
 
-            // Ensure the leave period overlaps with the requested date range
-            if ($leaveStartDate->between($startDate, $endDate) || $leaveEndDate->between($startDate, $endDate) || ($leaveStartDate <= $startDate && $leaveEndDate >= $endDate)) {
-              $unpaidLeaveCount += $leaveStartDate->diffInDays($leaveEndDate) + 1;
-            }
-          }
-        }
+        $unpaidLeaveCount = (int)$result->unpaid_leave_count ?? 0;
+        $paidLeaveCount   = (int)$result->paid_leave_count ?? 0;
+        // foreach ($staff->leaves as $leave) {
+          // if ($leave->is_unpaid_leave) {
+          //   // Count the number of unpaid leave days in the date range
+          //   $leaveStartDate = Carbon::parse($leave->start_date);
+          //   $leaveEndDate = Carbon::parse($leave->end_date);
+
+          //   // Ensure the leave period overlaps with the requested date range
+          //   if ($leaveStartDate->between($startDate, $endDate) || $leaveEndDate->between($startDate, $endDate) || ($leaveStartDate <= $startDate && $leaveEndDate >= $endDate)) {
+          //     $unpaidLeaveCount += $leaveStartDate->diffInDays($leaveEndDate) + 1;
+          //   }
+          // }
+        // }
         $actualWorkDays = max(0, $totalDays - $offDayCount - $unpaidLeaveCount - $publicHolidays);
         $actualBasicSalary = $actualWorkDays > 0 ?  ($salary->basic_salary) / $actualWorkDays : 0;
 
@@ -889,10 +899,23 @@ class SalaryRepository implements SalaryRepositoryInterface
         } else {
           $overtimePay = 0;
         }
+        // $totalSalary =  max(0, (float) ($salary->basic_salary - $totalDeduction) + ($totalAllowance + $overtimePay));
+        // $perDaySalary=(float)$totalSalary / $totalDays;
+        // $netSalary=(int)($perDaySalary* $actualWorkedDay);
+        $salaryPerDay = $salary->basic_salary / $totalDays;
 
-        $totalSalary =  max(0, (float) ($salary->basic_salary - $totalDeduction) + ($totalAllowance + $overtimePay));
-        $perDaySalary=(float)$totalSalary / $totalDays;
-        $netSalary=(int)($perDaySalary*$actualCheckIn);
+        // Income
+        $basicPay = $salaryPerDay * ($actualWorkedDay + $paidLeaveCount);
+
+        $grossIncome = $basicPay + $totalAllowance + $overtimePay;
+
+        // Deductions
+        $unpaidLeaveDeduction = $salaryPerDay * $unpaidLeaveCount;
+
+        $totalDeductions = $unpaidLeaveDeduction + $totalDeduction;
+
+        // Final salary
+        $netSalary = $grossIncome - $totalDeductions;
         $salaryDetails[] = [
           'staff_id' => $staff->id,
           'staff_name' => $staff->name,
@@ -903,7 +926,7 @@ class SalaryRepository implements SalaryRepositoryInterface
           'salary_batch_id' => $request->salary_batch_id,
           'salary_batch_name' => $salaryBatchStaff->salaryBatch->name,
           'salary_id' => $salary->id,
-          // 'formal_basic_salary' =>  $salary->basic_salary,
+          'formal_basic_salary' =>  $salary->basic_salary,
           'allowance' =>  round($totalAllowance, 2),
           'deductions' => $totalDeduction,
           'overtime_hours' => round(max(0, $totalOvertimeHours), 2) ?? null,
@@ -1048,41 +1071,43 @@ class SalaryRepository implements SalaryRepositoryInterface
     }
   }
 
-  public function confirmPaySlip($id){
-    $paySlip=PaySlip::find($id);
-    if(!$paySlip){
-      \ResponseMessage('PaySlip is Empty',419);
+  public function confirmPaySlip($id)
+  {
+    $paySlip = PaySlip::find($id);
+    if (!$paySlip) {
+      \ResponseMessage('PaySlip is Empty', 419);
     }
-    if($paySlip->is_confirm){
+    if ($paySlip->is_confirm) {
       \ResponseMessage('PaySlip is already confirmed', 419);
     }
-    $paySlip->is_confirm=true;
-    $paySlip->confirmed_at=now();
+    $paySlip->is_confirm = true;
+    $paySlip->confirmed_at = now();
     $paySlip->confirmed_by = \UserData()->id ?? null;
     $paySlip->save();
     return $paySlip;
   }
 
-  public function getStaffPaySlip($data){
+  public function getStaffPaySlip($data)
+  {
     $staffId = \UserData()->id;
-    $salary=Salary::where('staff_id',$staffId)->latest()->first();
-    $salarySetupId=$salary->salary_setup_id ?? null;
-    $salaryAllowance=SalaryAllowance::where('salary_setup_id',$salarySetupId)
-    ->join('allowances','salary_allowances.allowance_id','allowances.id')
-    ->where('allowances.type','allowance')
-    ->select(DB::raw('SUM(salary_allowances.amount) as total_allowances'))
-    ->first();
-    $paySlips=PaySlip::orderBy('id','desc')
-    ->where('is_confirm',true)
-    ->where('staff_id',$staffId)
-    ->get();
-    $paySlipResource=PaySlipResource::collection($paySlips);
-    return[
-      'salary'=>[
-        'basic_salary'=>$salary->basic_salary ?? 0,
-        'allowance_amount'=>  $salaryAllowance->total_allowances ?? 0,
+    $salary = Salary::where('staff_id', $staffId)->latest()->first();
+    $salarySetupId = $salary->salary_setup_id ?? null;
+    $salaryAllowance = SalaryAllowance::where('salary_setup_id', $salarySetupId)
+      ->join('allowances', 'salary_allowances.allowance_id', 'allowances.id')
+      ->where('allowances.type', 'allowance')
+      ->select(DB::raw('SUM(salary_allowances.amount) as total_allowances'))
+      ->first();
+    $paySlips = PaySlip::orderBy('id', 'desc')
+      ->where('is_confirm', true)
+      ->where('staff_id', $staffId)
+      ->get();
+    $paySlipResource = PaySlipResource::collection($paySlips);
+    return [
+      'salary' => [
+        'basic_salary' => $salary->basic_salary ?? 0,
+        'allowance_amount' =>  $salaryAllowance->total_allowances ?? 0,
       ],
-      'pay_slips'=> $paySlipResource,
+      'pay_slips' => $paySlipResource,
     ];
   }
 }
