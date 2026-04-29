@@ -29,31 +29,31 @@ Route::middleware('auth:customer_api')->group(function () {
     Route::post('/customers/logout', [AuthController::class, 'logout']);
     Route::post('/customers/change_password', [AuthController::class, 'changePassword']);
 
-    Route::post('/user_app/change_phone_otp', [CustomerAPIController::class, 'changePhoneNumberOTP']);
-    Route::post('/user_app/change_phone_number', [CustomerAPIController::class, 'changePhoneNumber']);
+    // Route::post('/user_app/change_phone_otp', [CustomerAPIController::class, 'changePhoneNumberOTP']);
+    // Route::post('/user_app/change_phone_number', [CustomerAPIController::class, 'changePhoneNumber']);
 
 
-    Route::get('/user_app/profile', [CustomerAPIController::class, 'getCustomerDataByUserApp']);
-    Route::post('/user_app/user_profile/edit', [CustomerAPIController::class, 'customerProfileEdit']);
+    // Route::get('/user_app/profile', [CustomerAPIController::class, 'getCustomerDataByUserApp']);
+    // Route::post('/user_app/user_profile/edit', [CustomerAPIController::class, 'customerProfileEdit']);
 
-    Route::get('/user_app/user_addresses', [CustomerAPIController::class, 'getCustomerAddressByUserApp']);
-    Route::post('/user_app/user_addresses/{id}', [CustomerAPIController::class, 'updateCustomerAddress']);
-    Route::post('/user_app/user_addresses', [CustomerAPIController::class, 'createCustomerAddress']);
-    Route::post('/user_app/default_addresses/{id}', [CustomerAPIController::class, 'defaultCustomerAddress']);
-    Route::delete('/user_app/user_addresses/{id}', [CustomerAPIController::class, 'deleteCustomerAddress']);
+    // Route::get('/user_app/user_addresses', [CustomerAPIController::class, 'getCustomerAddressByUserApp']);
+    // Route::post('/user_app/user_addresses/{id}', [CustomerAPIController::class, 'updateCustomerAddress']);
+    // Route::post('/user_app/user_addresses', [CustomerAPIController::class, 'createCustomerAddress']);
+    // Route::post('/user_app/default_addresses/{id}', [CustomerAPIController::class, 'defaultCustomerAddress']);
+    // Route::delete('/user_app/user_addresses/{id}', [CustomerAPIController::class, 'deleteCustomerAddress']);
 
-    Route::get('/user_app/bookings', [BookingAPIController::class, 'listAllBookings']);
-    Route::post('/user_app/bookings', [BookingAPIController::class, 'createBooking']);
-    Route::get('/user_app/room_lists', [EntityAPIContorller::class, 'roomList']);
-    Route::post('/user_app/food_orders', [FoodOrderAPIController::class, 'createOrder']);
+    // Route::get('/user_app/bookings', [BookingAPIController::class, 'listAllBookings']);
+    // Route::post('/user_app/bookings', [BookingAPIController::class, 'createBooking']);
+    // Route::get('/user_app/room_lists', [EntityAPIContorller::class, 'roomList']);
+    // Route::post('/user_app/food_orders', [FoodOrderAPIController::class, 'createOrder']);
 
 });
 
-Route::get('/user_app/ads', [AdsAPIController::class, 'getAdsByUserApp']);
-Route::get('/user_app/menu_categories', [MenuCategoryAPIController::class, 'getMenuCategoriesbyUserApp']);
-Route::get('/user_app/menus', [MenuAPIController::class, 'listMenuData']);
-Route::get('/user_app/menu_categories/{id}/menus', [MenuAPIController::class, 'categoryMenuByUserApp']);
-Route::get('/user_app/packages', [PackageAPIController::class, 'getPackage']);
+// Route::get('/user_app/ads', [AdsAPIController::class, 'getAdsByUserApp']);
+// Route::get('/user_app/menu_categories', [MenuCategoryAPIController::class, 'getMenuCategoriesbyUserApp']);
+// Route::get('/user_app/menus', [MenuAPIController::class, 'listMenuData']);
+// Route::get('/user_app/menu_categories/{id}/menus', [MenuAPIController::class, 'categoryMenuByUserApp']);
+// Route::get('/user_app/packages', [PackageAPIController::class, 'getPackage']);
 
 
 // });

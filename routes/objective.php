@@ -54,33 +54,33 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/ktv/objective_trees/{id}', 'updateKtvObjTree');
   });
 
-  Route::controller(MRPForecastController::class)->group(function () {
-    Route::post('/forecast/menus', 'getForcastMenus');
-    Route::post('/forecast/menus/{menuId}', 'getForcastMenusByMenuId');
-    Route::post('/forecast/hr', 'getForcastHR');
-    Route::post('/forecast/hr/{menuId}', 'getForcastHrByMenuId');
-    Route::post('/forecast/raw_materials/{menuId}', 'getForcastRawMaterialByMenuId');
-    Route::post('/forecast/raw_materials', 'getForcastRawMaterial');
+  // Route::controller(MRPForecastController::class)->group(function () {
+  //   Route::post('/forecast/menus', 'getForcastMenus');
+  //   Route::post('/forecast/menus/{menuId}', 'getForcastMenusByMenuId');
+  //   Route::post('/forecast/hr', 'getForcastHR');
+  //   Route::post('/forecast/hr/{menuId}', 'getForcastHrByMenuId');
+  //   Route::post('/forecast/raw_materials/{menuId}', 'getForcastRawMaterialByMenuId');
+  //   Route::post('/forecast/raw_materials', 'getForcastRawMaterial');
 
-    Route::get('/forecasts/purchase_orders', 'getPoForecasts');
-    Route::post('/forecasts/purchase_orders_item/{itemId}', 'storePoForecastsByItemId');
+  //   Route::get('/forecasts/purchase_orders', 'getPoForecasts');
+  //   Route::post('/forecasts/purchase_orders_item/{itemId}', 'storePoForecastsByItemId');
 
-    Route::post('/forecasts', 'storeForecast');
-    Route::get('/forecasts_monthly_menus', 'getMonthlyMenuForecasts');
-    Route::get('/forecasts_monthly_menu/{mrpForecastId}', 'getMonthlyMenuForecastsById');
-    Route::post('/forecasts_monthly_menu/{mrpForecastId}', 'updateMenuForecast');
-    Route::delete('/forecasts_mrp_monthly_menu/{target_mrp_forecast_id}', 'deleteMenuForecast');
+  //   Route::post('/forecasts', 'storeForecast');
+  //   Route::get('/forecasts_monthly_menus', 'getMonthlyMenuForecasts');
+  //   Route::get('/forecasts_monthly_menu/{mrpForecastId}', 'getMonthlyMenuForecastsById');
+  //   Route::post('/forecasts_monthly_menu/{mrpForecastId}', 'updateMenuForecast');
+  //   Route::delete('/forecasts_mrp_monthly_menu/{target_mrp_forecast_id}', 'deleteMenuForecast');
 
-    //ktv forecasts
-    Route::get('/forecasts/monthly/ktv_product_tree', 'getMonthlyKTVProductTreeForecasts');
-    Route::post('/forecast/ktvs', 'getForecastKTV');
-    Route::post('/forecast/ktvs/{entityId}', 'getForecastKTVByEntityId');
-    Route::post('/forecast/ktvs_raw_materials', 'getForecastKTVRawMaterials');
-    Route::post('/forecast/ktvs_raw_materials/{entityId}', 'getForecastKTVRawMaterialsByEntityId');
-    Route::post('/forecast/ktvs_hr', 'getForecastKTVHr');
-    Route::post('/forecast/ktvs_hr/{entityId}', 'getForecastKTVHrByEntityId');
-    Route::delete('/mrp_forecasts/{mrp_forecast_id}', 'deleteMrpForecast');
-  });
+  //   //ktv forecasts
+  //   Route::get('/forecasts/monthly/ktv_product_tree', 'getMonthlyKTVProductTreeForecasts');
+  //   Route::post('/forecast/ktvs', 'getForecastKTV');
+  //   Route::post('/forecast/ktvs/{entityId}', 'getForecastKTVByEntityId');
+  //   Route::post('/forecast/ktvs_raw_materials', 'getForecastKTVRawMaterials');
+  //   Route::post('/forecast/ktvs_raw_materials/{entityId}', 'getForecastKTVRawMaterialsByEntityId');
+  //   Route::post('/forecast/ktvs_hr', 'getForecastKTVHr');
+  //   Route::post('/forecast/ktvs_hr/{entityId}', 'getForecastKTVHrByEntityId');
+  //   Route::delete('/mrp_forecasts/{mrp_forecast_id}', 'deleteMrpForecast');
+  // });
 
   Route::controller(JobDescriptionController::class)->group(function () {
     Route::get('/job-descriptions', 'getJobDescription');

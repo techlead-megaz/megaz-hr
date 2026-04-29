@@ -745,7 +745,6 @@ class SalaryRepository implements SalaryRepositoryInterface
       ->paginate(config('common.list_count'));
 
     $publicHolidays = DayInOffDay::whereBetween('date', [$startDate, $endDate])->where('day', 'Public-holiday')->count();
-
     if ($salaryBatchStaffs->isEmpty()) {
       ResponseMessage('No staff found in this batch.', 404);
     }
@@ -756,8 +755,12 @@ class SalaryRepository implements SalaryRepositoryInterface
       $salary = $staff->salary;   //basic salary
       $checkIns = CheckIn::where('staff_id', $staff->id)
         ->whereBetween('check_in_date_time', [$startDate, $endDate])
-        ->whereBetween('check_out_date_time', [$startDate, $endDate])
         ->get();
+      $actualCheckIn = $checkIns
+        ->pluck('check_in_date_time')
+        ->map(fn($date) => \Carbon\Carbon::parse($date)->toDateString())
+        ->unique()
+        ->count();
       if ($salary && $checkIns->isNotEmpty()) {
         $totalAllowance = 0;
         $totalDeduction = 0;
@@ -837,8 +840,6 @@ class SalaryRepository implements SalaryRepositoryInterface
         }
         $actualWorkDays = max(0, $totalDays - $offDayCount - $unpaidLeaveCount - $publicHolidays);
         $actualBasicSalary = $actualWorkDays > 0 ?  ($salary->basic_salary) / $actualWorkDays : 0;
-        
-
 
         $totalWorkedHours = 0;
         $totalOvertimeHours = 0;
@@ -852,6 +853,7 @@ class SalaryRepository implements SalaryRepositoryInterface
             $totalWorkedHours += (float) $workedHours;
           }
         }
+        // dd($totalWorkedHours);
 
         $overtimes = Overtime::where('staff_id', $staff->id)
           ->whereBetween('from_date', [$startDate, $endDate])
@@ -888,7 +890,9 @@ class SalaryRepository implements SalaryRepositoryInterface
           $overtimePay = 0;
         }
 
-        $netSalary =  max(0, (float) ($actualBasicSalary - $totalDeduction) + ($totalAllowance + $overtimePay));
+        $totalSalary =  max(0, (float) ($salary->basic_salary - $totalDeduction) + ($totalAllowance + $overtimePay));
+        $perDaySalary=(float)$totalSalary / $totalDays;
+        $netSalary=(int)($perDaySalary*$actualCheckIn);
         $salaryDetails[] = [
           'staff_id' => $staff->id,
           'staff_name' => $staff->name,

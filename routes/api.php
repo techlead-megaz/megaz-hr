@@ -206,16 +206,16 @@ Route::middleware('auth:api')->group(function () {
     
     Route::resource('head_accounts', HeadAccountController::class)->only(['index', 'store', 'show', 'destroy']);
     Route::resource('sub_accounts', SubAccountController::class)->only(['index', 'store', 'show', 'destroy']);
-    Route::resource('accounts', AccountController::class)->only(['index', 'store', 'show', 'destroy']);
-    Route::controller(AccountController::class)->group(function () {
-        Route::get('sub_account_by_head_account/{id}', 'getSubAccountByHeadAccount');
-        Route::get('get_cash_account', 'getCashAccount');
-        Route::get('account_by_sub_account/{id}', 'accountBySubAccount');
-        Route::post('create_second_account', 'createSecondAccount');
-        Route::post('create_third_account', 'createThirdAccount');
-        Route::get('get_second_account', 'getSecondAccount');
-        Route::get('get_third_account', 'getThirdAccount');
-    });
+    // Route::resource('accounts', AccountController::class)->only(['index', 'store', 'show', 'destroy']);
+    // Route::controller(AccountController::class)->group(function () {
+    //     Route::get('sub_account_by_head_account/{id}', 'getSubAccountByHeadAccount');
+    //     Route::get('get_cash_account', 'getCashAccount');
+    //     Route::get('account_by_sub_account/{id}', 'accountBySubAccount');
+    //     Route::post('create_second_account', 'createSecondAccount');
+    //     Route::post('create_third_account', 'createThirdAccount');
+    //     Route::get('get_second_account', 'getSecondAccount');
+    //     Route::get('get_third_account', 'getThirdAccount');
+    // });
    
 
     // Route::resource('transactions', TransactionController::class)->only(['index', 'store', 'show', 'destroy']);
@@ -288,14 +288,14 @@ Route::controller(FeatureAPIController::class)->group(function () {
     Route::get('feature_by_department/{department_id}', 'getFeatureByDepartment');
     Route::get('feature_by_module', 'getFeatureByModule');
 });
-Route::controller(AdsAPIController::class)->group(function () {
-    Route::get('/ads', 'getAds');
-    Route::post('/ads', 'createAds');
-    Route::post('/ads/{id}', 'editAds');
-    Route::get('/ads/{id}', 'adsDetail');
-    Route::delete('/ads/{id}', 'deleteAds');
-    Route::get('/latest_ads', 'latestAds');
-});
+// Route::controller(AdsAPIController::class)->group(function () {
+//     Route::get('/ads', 'getAds');
+//     Route::post('/ads', 'createAds');
+//     Route::post('/ads/{id}', 'editAds');
+//     Route::get('/ads/{id}', 'adsDetail');
+//     Route::delete('/ads/{id}', 'deleteAds');
+//     Route::get('/latest_ads', 'latestAds');
+// });
 
 Route::controller(ExcelImportController::class)->group(function () {
     Route::post('/import_account', 'importAccount');
@@ -337,15 +337,15 @@ Route::get('/complaints', [ComplaintAPIController::class, 'getComplainData']);
 
 
 
-Route::get('/menus/{menu_id}/areas', [MenuAPIController::class, 'areaByMenu']);
+// Route::get('/menus/{menu_id}/areas', [MenuAPIController::class, 'areaByMenu']);
 
 
 Route::get('get_inventory', [InventoryAPIController::class, 'getInventory']);
 // feature
 
 
-Route::controller(TagController::class)->group(function () {
-    Route::get('/tags', 'getTags');
-    Route::post('/tags', 'createTag');
-});
+// Route::controller(TagController::class)->group(function () {
+//     Route::get('/tags', 'getTags');
+//     Route::post('/tags', 'createTag');
+// });
 

@@ -151,13 +151,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/staff_time_shifts/{id}/status', 'updateStaffTimeShiftStatus');
     Route::post('/staff_time_shifts/{id}/request_off_day', 'createOffDayRequest');
   });
-  Route::prefix('hr')->controller(AssetItemEquipmentAssignController::class)->group(function () {
-    Route::post('/asset-assignments', 'createAssetAssign');
-    Route::get('/asset-assignments', 'getAssetAssigns');
-    Route::post('/equipment-assignments', 'createEquipmentAssign');
-    Route::get('/equipment-assignments', 'getEquipmentAssigns');
-    Route::get('/equipment-assignments/staff', 'getEquipmentAssignsByStaffId');
-  });
+  // Route::prefix('hr')->controller(AssetItemEquipmentAssignController::class)->group(function () {
+  //   Route::post('/asset-assignments', 'createAssetAssign');
+  //   Route::get('/asset-assignments', 'getAssetAssigns');
+  //   Route::post('/equipment-assignments', 'createEquipmentAssign');
+  //   Route::get('/equipment-assignments', 'getEquipmentAssigns');
+  //   Route::get('/equipment-assignments/staff', 'getEquipmentAssignsByStaffId');
+  // });
 
 
   Route::prefix('hr')->controller(HandBookeController::class)->group(function () {
@@ -177,10 +177,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/staff-equipment-handovers/{id}', 'getStaffEquipmentHandoverById');
     Route::get('/lost-items', 'getLostItems'); //admin panel
   });
-  Route::controller(MenuItemImportController::class)->group(function () {
-    Route::post('/ready-to-sale-menu-item-import', 'readyToSaleMenuItemImport');
-    Route::post('/raw-item-import', 'rawItemImport');
-  });
+  // Route::controller(MenuItemImportController::class)->group(function () {
+  //   Route::post('/ready-to-sale-menu-item-import', 'readyToSaleMenuItemImport');
+  //   Route::post('/raw-item-import', 'rawItemImport');
+  // });
 
   Route::prefix('benefits')->controller(BenefitController::class)->group(function () {
     Route::get('/', 'index');

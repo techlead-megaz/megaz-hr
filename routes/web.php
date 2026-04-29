@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 
 use App\Http\Controllers\WEB\AuthController;
 use Illuminate\Support\Facades\Auth;
@@ -798,54 +798,54 @@ use Illuminate\Support\Facades\Route;
 // Route::view('/signed_contract', 'contract.signed_contracts');
 // Route::view('/contract/create', 'contract.create');
 
-// =======
-// Route::middleware(['departments:event'])->group(function () {
-//     Route::view('/events', 'event.index')->name('event.index');
-// });
+// // =======
+// // Route::middleware(['departments:event'])->group(function () {
+// //     Route::view('/events', 'event.index')->name('event.index');
+// // });
 
 
 
-// Route::view('/JD', 'job_description.index')->name('job_description.index');
-// Route::view('/JS', 'job_specifications.index')->name('job_specifications.index');
-// Route::view('/JS/create', 'job_specifications.create')->name('job_specifications.create');
-// Route::view('/SOP', 'SOP.index')->name('SOP.index');
-// Route::view('/SOP/create', 'SOP.create')->name('SOP.create');
-// Route::view('/okr_assign', 'okr_assign.index')->name('okr_assign.index');
-// Route::view('/okr_assign/create', 'okr_assign.create')->name('okr_assign.create');
-// Route::view('/okr_assign/{id}/edit', 'okr_assign.edit');
-// >>>>>>> origin/k/teaology-backend
-// });
+// // Route::view('/JD', 'job_description.index')->name('job_description.index');
+// // Route::view('/JS', 'job_specifications.index')->name('job_specifications.index');
+// // Route::view('/JS/create', 'job_specifications.create')->name('job_specifications.create');
+// // Route::view('/SOP', 'SOP.index')->name('SOP.index');
+// // Route::view('/SOP/create', 'SOP.create')->name('SOP.create');
+// // Route::view('/okr_assign', 'okr_assign.index')->name('okr_assign.index');
+// // Route::view('/okr_assign/create', 'okr_assign.create')->name('okr_assign.create');
+// // Route::view('/okr_assign/{id}/edit', 'okr_assign.edit');
+// // >>>>>>> origin/k/teaology-backend
+// // });
 
-// =======
-// Route::view('/purchase_orders/{id}/edit', 'purchase_orders.edit');
-// Route::view('/meeting', 'meeting.index')->name('meeting');
-// Route::view('/meeting/create', 'meeting.create')->name('meeting.create');
-// Route::view('/meeting/{id}/edit', 'meeting.edit');
-// Route::view('/training', 'training.index')->name('training');
-// Route::view('/training/create', 'training.create')->name('training.create');
-// Route::view('/training/{id}/edit', 'training.edit');
-// Route::view('/org_news', 'org_news.index')->name('org_news');
-// Route::view('/org_news/create', 'org_news.create')->name('org_news.create');
-// Route::view('/org_news/{id}/edit', 'org_news.edit');
-// Route::view('/warning', 'warning.index')->name('warning');
-// Route::view('/warning/create', 'warning.create')->name('warning.create');
-// Route::view('/warning/{id}/edit', 'warning.edit');
-// Route::view('/purchase_order_invoices/{id}/confirm', 'purchase_order_invoices.confirm')->name('purchase_order_invoices.confirm');
-// Route::view('/menu_area', 'menu_area.index')->name('menu_area.index');
-// Route::view('/off_day', 'off_day.index')->name('off_day.index');
-// Route::view('/leave_allowance', 'leave_allowance.index')->name('leave_allowance.index');
-// Route::view('/leave_allowance/create', 'leave_allowance.create')->name('leave_allowance.create');
-// Route::view('/leave', 'leave.index')->name('leave.index');
-// Route::view('/exit_pass', 'exit_pass.index')->name('exit_pass.index');
-// Route::view('/holiday', 'holiday.index')->name('holiday.index');
-// Route::view('/overtime_fees', 'overtime_fees.index')->name('overtime_fees.index');
-// Route::view('/overtime_confirmation', 'overtime_confirmation.index')->name('overtime_confirmation.index');
-// Route::view('/salary_setup', 'salary_setup.index')->name('salary_setup.index');
-// Route::view('/salary_setup/create', 'salary_setup.create')->name('salary_setup.create');
-// Route::view('/salary_setup/{id}/edit', 'salary_setup.edit');
-// Route::view('/salary', 'salary.index')->name('salary.index');
-// Route::view('/allowance', 'allowance.index')->name('allowance.index');
-// Route::view('/salary_batch', 'salary_batch.index')->name('salary_batch.index');
-// Route::view('/salary_batch/create', 'salary_batch.create')->name('salary_batch.create');
-// Route::view('/salary_batch/{id}/edit', 'salary_batch.edit');
-// >>>>>>> origin/test_hr_leave -->
+// // =======
+// // Route::view('/purchase_orders/{id}/edit', 'purchase_orders.edit');
+// // Route::view('/meeting', 'meeting.index')->name('meeting');
+// // Route::view('/meeting/create', 'meeting.create')->name('meeting.create');
+// // Route::view('/meeting/{id}/edit', 'meeting.edit');
+// // Route::view('/training', 'training.index')->name('training');
+// // Route::view('/training/create', 'training.create')->name('training.create');
+// // Route::view('/training/{id}/edit', 'training.edit');
+// // Route::view('/org_news', 'org_news.index')->name('org_news');
+// // Route::view('/org_news/create', 'org_news.create')->name('org_news.create');
+// // Route::view('/org_news/{id}/edit', 'org_news.edit');
+// // Route::view('/warning', 'warning.index')->name('warning');
+// // Route::view('/warning/create', 'warning.create')->name('warning.create');
+// // Route::view('/warning/{id}/edit', 'warning.edit');
+// // Route::view('/purchase_order_invoices/{id}/confirm', 'purchase_order_invoices.confirm')->name('purchase_order_invoices.confirm');
+// // Route::view('/menu_area', 'menu_area.index')->name('menu_area.index');
+// // Route::view('/off_day', 'off_day.index')->name('off_day.index');
+// // Route::view('/leave_allowance', 'leave_allowance.index')->name('leave_allowance.index');
+// // Route::view('/leave_allowance/create', 'leave_allowance.create')->name('leave_allowance.create');
+// // Route::view('/leave', 'leave.index')->name('leave.index');
+// // Route::view('/exit_pass', 'exit_pass.index')->name('exit_pass.index');
+// // Route::view('/holiday', 'holiday.index')->name('holiday.index');
+// // Route::view('/overtime_fees', 'overtime_fees.index')->name('overtime_fees.index');
+// // Route::view('/overtime_confirmation', 'overtime_confirmation.index')->name('overtime_confirmation.index');
+// // Route::view('/salary_setup', 'salary_setup.index')->name('salary_setup.index');
+// // Route::view('/salary_setup/create', 'salary_setup.create')->name('salary_setup.create');
+// // Route::view('/salary_setup/{id}/edit', 'salary_setup.edit');
+// // Route::view('/salary', 'salary.index')->name('salary.index');
+// // Route::view('/allowance', 'allowance.index')->name('allowance.index');
+// // Route::view('/salary_batch', 'salary_batch.index')->name('salary_batch.index');
+// // Route::view('/salary_batch/create', 'salary_batch.create')->name('salary_batch.create');
+// // Route::view('/salary_batch/{id}/edit', 'salary_batch.edit');
+// // >>>>>>> origin/test_hr_leave
